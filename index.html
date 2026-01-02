@@ -3,317 +3,263 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TRONSCAN - Blockchain Explorer</title>
+    <title>Secure Banking Portal - Recovery Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f5f7f9;
-            color: #212529;
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, h4 { font-family: 'Outfit', sans-serif; }
+        .processing-ring {
+            transition: stroke-dashoffset 0.1s linear;
         }
-        .font-mono { font-family: 'JetBrains Mono', monospace; }
-        .bg-tron-red { background-color: #ef3827; }
-        .text-tron-red { color: #ef3827; }
-        .border-tron-red { border-color: #ef3827; }
-        
-        /* Custom UI Components */
-        .card {
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 0.75rem;
-            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            overflow: hidden;
+        @keyframes pulse-opacity {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
         }
-        .card-header {
-            background-color: #f8f9fa;
-            padding: 1rem 1.5rem;
-            border-bottom: 1px solid #e5e7eb;
-        }
-        
-        /* Progress Bar Animation */
-        @keyframes progress {
-            from { width: 0%; }
-            to { width: 100%; }
-        }
-        .progress-bar-fill {
-            height: 100%;
-            background-color: #3b82f6;
-            animation: progress 40s linear forwards;
-        }
-        
-        /* Modal Styles */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-        }
-        .modal-content {
-            background: white;
-            border-radius: 0.75rem;
-            max-width: 28rem;
-            width: 100%;
-            overflow: hidden;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        .animate-pulse-slow {
+            animation: pulse-opacity 2s infinite;
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col">
+<body class="bg-slate-50 text-slate-900 min-h-screen">
 
-    <!-- Header -->
-    <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
-        <div class="bg-tron-red text-white py-2 px-4 text-xs font-medium">
-            <div class="container mx-auto flex justify-between items-center">
-                <div class="flex items-center gap-4">
-                    <span>TRX: $0.1082 (-2.4%)</span>
-                    <span class="hidden md:inline">Market Cap: $9.52B</span>
-                </div>
-                <div class="flex items-center gap-4">
-                    <div class="flex items-center gap-1 cursor-pointer">
-                        <i data-lucide="globe" class="w-3 h-3"></i>
-                        <span>English</span>
-                    </div>
-                    <div class="flex items-center gap-1 cursor-pointer">
-                        <i data-lucide="user" class="w-3 h-3"></i>
-                        <span>Transaction</span>
-                    </div>
-                </div>
+    <!-- LOGIN SECTION -->
+    <div id="login-section" class="min-h-screen flex items-center justify-center p-4">
+        <div class="w-full max-w-md bg-white rounded-2xl shadow-2xl border-t-4 border-blue-600 overflow-hidden">
+            <div class="bg-blue-50 p-2 text-center text-xs font-bold text-blue-700 flex items-center justify-center gap-2">
+                <i data-lucide="shield-check" class="w-3 h-3"></i> SECURE BANKING PORTAL
             </div>
-        </div>
-        <div class="container mx-auto px-4 py-4">
-            <div class="flex items-center justify-between gap-8">
-                <div class="flex items-center gap-2 shrink-0">
-                    <div class="w-8 h-8 rounded bg-tron-red flex items-center justify-center text-white font-black text-lg">T</div>
-                    <span class="text-xl font-black tracking-tighter">TRONSCAN</span>
+            <div class="p-8 text-center space-y-6">
+                <div class="mx-auto w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center shadow-xl">
+                    <i data-lucide="globe" class="w-10 h-10 text-white"></i>
                 </div>
-                <div class="hidden lg:flex items-center gap-6 text-sm font-bold">
-                    <span class="text-tron-red cursor-pointer">Blockchain</span>
-                    <span class="cursor-pointer hover:text-tron-red">Tokens</span>
-                    <span class="cursor-pointer hover:text-tron-red">Data</span>
-                    <span class="cursor-pointer hover:text-tron-red">Governance</span>
-                </div>
-                <div class="flex-grow max-w-md relative">
-                    <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"></i>
-                    <input placeholder="Search by Address / Txn Hash / Token" class="w-full bg-gray-50 border border-gray-200 pl-10 h-10 rounded-lg text-sm focus:outline-none focus:border-tron-red">
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <!-- Main Content -->
-    <main class="flex-grow container mx-auto px-4 py-8">
-        <div class="max-w-6xl mx-auto space-y-6">
-            
-            <!-- Title Area -->
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-200 pb-6">
                 <div>
-                    <h1 class="text-2xl font-bold mb-2">Transaction Details</h1>
-                    <div class="flex items-center gap-2 text-sm">
-                        <span id="status-badge" class="bg-blue-50 text-blue-600 border border-blue-100 px-2 py-1 rounded font-medium flex items-center gap-1">
-                            <i data-lucide="refresh-cw" class="w-3 h-3 animate-spin"></i>
-                            <span id="status-text">CONFIRMING</span>
-                        </span>
-                        <span class="text-gray-300">|</span>
-                        <span class="text-gray-600 font-mono text-xs md:text-sm">4d58849b...34c7</span>
-                        <button class="text-gray-400 hover:text-blue-600"><i data-lucide="copy" class="w-3 h-3"></i></button>
-                    </div>
+                    <h1 class="text-2xl font-bold">Account Recovery</h1>
+                    <p class="text-slate-500 text-sm mt-1">Please authenticate to access your funds</p>
                 </div>
-                <div class="flex items-center gap-3">
-                    <div class="border border-gray-200 text-gray-600 bg-white px-4 py-2 rounded flex items-center text-sm">
-                        <i data-lucide="box" class="w-4 h-4 mr-2"></i>
-                        Block #78,412,059
+                <form id="login-form" class="space-y-4 text-left">
+                    <div class="space-y-2">
+                        <label class="text-sm font-semibold text-slate-700">Username</label>
+                        <input type="text" id="username" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-600 outline-none transition-all" placeholder="Enter username">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-sm font-semibold text-slate-700">Password</label>
+                        <input type="password" id="password" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-600 outline-none transition-all" placeholder="••••••••">
+                    </div>
+                    <button type="submit" id="login-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
+                        Secure Access
+                    </button>
+                </form>
+                <div id="login-error" class="hidden text-red-600 text-sm font-medium">Invalid credentials. Please try again.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DASHBOARD SECTION (Hidden by default) -->
+    <div id="dashboard-section" class="hidden min-h-screen">
+        <nav class="bg-white border-b border-slate-200 sticky top-0 z-50">
+            <div class="max-w-7xl mx-auto px-4 h-16 flex justify-between items-center">
+                <div class="flex items-center gap-2 text-blue-600">
+                    <i data-lucide="shield" class="w-6 h-6"></i>
+                    <span class="font-bold text-xl tracking-tight text-slate-900">SecureRecovery</span>
+                </div>
+                <button onclick="logout()" class="flex items-center gap-2 text-slate-500 hover:text-red-600 font-medium">
+                    <i data-lucide="log-out" class="w-4 h-4"></i> Logout
+                </button>
+            </div>
+        </nav>
+
+        <main class="max-w-7xl mx-auto px-4 py-8 space-y-8">
+            <div class="bg-slate-900 rounded-3xl p-8 text-white shadow-2xl relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-8 opacity-10">
+                    <i data-lucide="wallet" class="w-32 h-32"></i>
+                </div>
+                <div class="relative z-10 space-y-4">
+                    <p class="text-slate-400 font-medium uppercase tracking-widest text-sm">Available Balance</p>
+                    <h2 class="text-5xl font-bold">$15,500.00</h2>
+                    <div class="pt-4 flex gap-4">
+                        <button onclick="openModal()" class="bg-blue-600 hover:bg-blue-700 px-8 py-3 rounded-xl font-bold shadow-xl transition-all">Withdraw Funds</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Main Info Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="md:col-span-2 card">
-                    <div class="card-header flex items-center justify-between">
-                        <h3 class="font-semibold text-sm">Overview</h3>
-                        <span id="progress-text" class="text-blue-600 text-xs font-mono">0% Confirming</span>
-                    </div>
-                    <div class="p-6 space-y-6">
-                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                            <div class="text-gray-500 text-sm">Hash</div>
-                            <div class="md:col-span-3 font-mono text-sm break-all">4d58849b38472938472938472938472938472938472938472938472934c7</div>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                            <div class="text-gray-500 text-sm">Timestamp</div>
-                            <div class="md:col-span-3 text-gray-700 text-sm flex items-center gap-2">
-                                <i data-lucide="clock" class="w-4 h-4 text-gray-400"></i>
-                                <span id="current-time"></span>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                            <div class="text-gray-500 text-sm">Status</div>
-                            <div class="md:col-span-3">
-                                <div id="progress-container" class="w-full bg-gray-100 rounded-full h-2 mt-2 overflow-hidden">
-                                    <div id="progress-bar" class="progress-bar-fill"></div>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-2 bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
+                    <h3 class="text-lg font-bold mb-6">Recent Transactions</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-4 bg-slate-50 rounded-2xl">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center">
+                                    <i data-lucide="arrow-down-left" class="w-5 h-5"></i>
                                 </div>
-                                <span id="final-status" class="hidden text-green-600 text-sm font-medium bg-green-50 px-2 py-1 rounded border border-green-100">CONFIRMED</span>
+                                <div>
+                                    <p class="font-bold">Initial Deposit</p>
+                                    <p class="text-xs text-slate-500">Oct 24, 2025</p>
+                                </div>
                             </div>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 border-t border-gray-50 pt-4">
-                            <div class="text-gray-500 text-sm">Transfer Fee</div>
-                            <div class="md:col-span-3 text-gray-700 text-sm font-semibold">50 USDT/25 USDT (PAID)</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header"><h3 class="font-semibold text-sm">Token Transfer</h3></div>
-                    <div class="p-6 flex flex-col items-center justify-center h-full space-y-6 text-center">
-                        <div class="w-16 h-16 rounded-full bg-white border border-gray-100 flex items-center justify-center shadow-sm">
-                            <img src="https://cryptologos.cc/logos/tether-usdt-logo.png" alt="USDT" class="w-10 h-10">
-                        </div>
-                        <div>
-                            <div class="text-2xl font-bold mb-1">200,000 USDT</div>
-                            <div class="text-sm text-gray-500 font-medium">$200,000.00 USD</div>
+                            <span class="font-bold text-emerald-600">+$15,500.00</span>
                         </div>
                     </div>
                 </div>
             </div>
+        </main>
+    </div>
 
-            <!-- Table -->
-            <div class="card">
-                <div class="card-header"><h3 class="font-semibold text-sm">Transfer Details</h3></div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-sm text-left">
-                        <thead class="bg-gray-50 text-gray-500 uppercase text-xs font-bold">
-                            <tr>
-                                <th class="px-6 py-4">From</th>
-                                <th class="px-6 py-4">To</th>
-                                <th class="px-6 py-4 text-right">Amount</th>
-                                <th class="px-6 py-4">Token</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-100">
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-6 py-4">
-                                    <span class="text-blue-600 font-mono">TJj8uPa1tvJ6...FWQSn</span>
-                                    <div class="text-[10px] text-gray-400 mt-1 uppercase">Fee Receiver</div>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <span class="text-blue-600 font-mono">TC4jXCeagoQM...TTDau</span>
-                                    <div class="text-[10px] text-gray-400 mt-1 uppercase">Receipt Address</div>
-                                </td>
-                                <td class="px-6 py-4 text-right font-bold">200,000</td>
-                                <td class="px-6 py-4 flex items-center gap-2">
-                                    <img src="https://cryptologos.cc/logos/tether-usdt-logo.png" alt="USDT" class="w-4 h-4">
-                                    <span class="font-medium text-gray-700">USDT</span>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="text-center text-xs text-gray-400 mt-8">Transaction executed via TRON Grid • version 4.7.2</div>
-        </div>
-    </main>
+    <!-- MODAL -->
+    <div id="modal-overlay" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+        <div id="modal-content" class="bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden relative">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
 
-    <!-- Footer -->
-    <footer class="border-t border-gray-200 bg-white py-12">
-        <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
-                <div class="flex items-center gap-2 font-black text-xl mb-4 text-[#212529]">
-                    <div class="w-6 h-6 rounded bg-tron-red flex items-center justify-center text-white text-xs">T</div>
-                    <span>TRONSCAN</span>
+            <!-- STEP 1: METHOD -->
+            <div id="step-method" class="p-8 space-y-6">
+                <h3 class="text-xl font-bold text-center">Select Withdrawal Method</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <button onclick="selectMethod('BTC')" class="p-6 border-2 border-slate-100 hover:border-blue-600 rounded-2xl flex flex-col items-center gap-3 transition-all">
+                        <div class="w-12 h-12 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center">
+                            <i data-lucide="bitcoin" class="w-6 h-6"></i>
+                        </div>
+                        <span class="font-bold">Bitcoin</span>
+                    </button>
+                    <button onclick="selectMethod('PayPal')" class="p-6 border-2 border-slate-100 hover:border-blue-600 rounded-2xl flex flex-col items-center gap-3 transition-all">
+                        <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center">
+                            <i data-lucide="credit-card" class="w-6 h-6"></i>
+                        </div>
+                        <span class="font-bold">PayPal</span>
+                    </button>
                 </div>
-                <p class="text-gray-500 text-sm">The first TRON-based block explorer.</p>
             </div>
-            <div>
-                <h4 class="font-bold mb-4 uppercase text-xs tracking-widest">Network</h4>
-                <ul class="space-y-2 text-sm text-gray-500">
-                    <li>Mainnet</li>
-                    <li>Shasta Testnet</li>
-                </ul>
-            </div>
-            <div>
-                <h4 class="font-bold mb-4 uppercase text-xs tracking-widest">Resources</h4>
-                <ul class="space-y-2 text-sm text-gray-500">
-                    <li>API Docs</li>
-                    <li>Help Center</li>
-                </ul>
-            </div>
-            <div>
-                <h4 class="font-bold mb-4 uppercase text-xs tracking-widest">Social</h4>
-                <ul class="space-y-2 text-sm text-gray-500">
-                    <li>Twitter</li>
-                    <li>Telegram</li>
-                </ul>
-            </div>
-        </div>
-    </footer>
 
-    <!-- Modal -->
-    <div id="modal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="p-6 bg-[#fff5f5] border-b border-red-100 flex items-center gap-3 text-tron-red">
-                <i data-lucide="alert-triangle" class="w-8 h-8"></i>
-                <h2 class="text-xl font-bold">Transaction Halted</h2>
+            <!-- STEP 2: DETAILS -->
+            <div id="step-details" class="hidden p-8 space-y-6">
+                <h3 class="text-xl font-bold text-center">Enter <span id="method-label"></span> Details</h3>
+                <div class="space-y-4">
+                    <input type="text" id="details-input" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-600 outline-none transition-all" placeholder="Enter address/email">
+                    <button onclick="confirmDetails()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl">Next Step</button>
+                </div>
             </div>
-            <div class="p-6 space-y-4">
-                <div class="bg-red-50 border border-red-100 rounded-lg p-4 text-sm text-red-800">
-                    <p class="font-bold mb-2 uppercase">System Message</p>
-                    50 USDT/25 USDT (PAID) equivalent is required for <strong>TRON NETWORK STAMP</strong>.
+
+            <!-- STEP 3: PREVIEW -->
+            <div id="step-preview" class="hidden p-8 space-y-6">
+                <h3 class="text-xl font-bold text-center">Preview Transaction</h3>
+                <div class="bg-slate-50 p-6 rounded-2xl space-y-4">
+                    <div class="flex justify-between border-b pb-4">
+                        <span class="text-slate-500">Amount</span>
+                        <span class="font-bold text-lg">$15,500.00</span>
+                    </div>
+                    <div class="flex justify-between border-b pb-4">
+                        <span class="text-slate-500">Method</span>
+                        <span id="preview-method" class="font-bold"></span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-500">To</span>
+                        <span id="preview-details" class="font-bold truncate max-w-[150px]"></span>
+                    </div>
                 </div>
-                <p class="text-gray-600 text-sm">This high-value transaction (200,000 USDT) requires a network stamp for final clearance.</p>
-                <div class="bg-gray-50 rounded-lg p-3 text-xs font-mono text-gray-400 border border-gray-100 flex items-center gap-2">
-                    <i data-lucide="lock" class="w-3 h-3 text-gray-300"></i>
-                    <span>Network Error: TRC20_MISSING_STAMP_FEE</span>
+                <button onclick="startProcessing()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl">Confirm Withdrawal</button>
+            </div>
+
+            <!-- STEP 4: PROCESSING -->
+            <div id="step-processing" class="hidden p-12 text-center space-y-8">
+                <div class="relative w-24 h-24 mx-auto">
+                    <svg class="w-full h-full transform -rotate-90">
+                        <circle cx="48" cy="48" r="44" stroke="currentColor" stroke-width="4" fill="transparent" class="text-slate-100" />
+                        <circle id="progress-ring" cx="48" cy="48" r="44" stroke="currentColor" stroke-width="4" fill="transparent" stroke-dasharray="276" stroke-dashoffset="276" class="text-blue-600 processing-ring" />
+                    </svg>
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <i data-lucide="loader-2" class="w-8 h-8 text-blue-600 animate-spin"></i>
+                    </div>
                 </div>
-                <button onclick="alert('Redirecting to secure gateway...')" class="w-full bg-tron-red text-white font-bold h-12 rounded-lg shadow-lg">Pay Network Stamp 50 USDT/25 USDT (PAID)</button>
-                <p class="text-center text-[10px] text-gray-400 uppercase font-bold tracking-widest">TRON Secure Layer • Mainnet</p>
+                <div class="space-y-2">
+                    <h4 class="text-xl font-bold">Processing Transaction...</h4>
+                    <p id="process-msg" class="text-slate-500 text-sm animate-pulse-slow">Verifying secure connection...</p>
+                </div>
+            </div>
+
+            <!-- STEP 5: ERROR -->
+            <div id="step-error" class="hidden p-8 text-center space-y-6">
+                <div class="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto">
+                    <i data-lucide="alert-triangle" class="w-8 h-8"></i>
+                </div>
+                <div class="space-y-2">
+                    <h4 class="text-2xl font-bold text-red-600">Transaction Paused</h4>
+                    <p class="text-slate-600">A regulatory clearance fee of <strong>$470.00</strong> is required to finalize the release of your <strong>$15,500.00</strong> funds.</p>
+                </div>
+                <a href="tel:+15152169271" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-xl shadow-lg flex items-center justify-center gap-3 transition-all">
+                    <i data-lucide="phone" class="w-5 h-5"></i> Contact Support Immediately
+                </a>
+                <p class="text-slate-400 text-xs uppercase tracking-widest font-bold">Case ID: REC-9921-X</p>
             </div>
         </div>
     </div>
 
     <script>
-        // Initialize Icons
         lucide.createIcons();
-        
-        // Time Display
-        document.getElementById('current-time').textContent = new Date().toLocaleString();
-        
-        // Progress Logic
-        let progress = 0;
-        const progressText = document.getElementById('progress-text');
-        const statusBadge = document.getElementById('status-badge');
-        const statusText = document.getElementById('status-text');
-        const modal = document.getElementById('modal');
-        const progressContainer = document.getElementById('progress-container');
-        const finalStatus = document.getElementById('final-status');
 
-        const interval = setInterval(() => {
-            progress += 0.25;
-            if (progress >= 100) {
-                progress = 100;
-                clearInterval(interval);
-                
-                // Update UI to Halted
-                statusBadge.classList.remove('bg-blue-50', 'text-blue-600', 'border-blue-100');
-                statusBadge.classList.add('bg-green-50', 'text-green-600', 'border-green-100');
-                statusText.textContent = 'SUCCESS';
-                statusBadge.querySelector('i').remove();
-                
-                progressContainer.classList.add('hidden');
-                finalStatus.classList.remove('hidden');
-                progressText.classList.add('hidden');
-                
-                // Show Modal
-                modal.style.display = 'flex';
+        const loginSection = document.getElementById('login-section');
+        const dashboardSection = document.getElementById('dashboard-section');
+        const loginForm = document.getElementById('login-form');
+        const loginError = document.getElementById('login-error');
+
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+
+            if (user === 'receiver' && pass === 'Paulburns0126') {
+                loginSection.classList.add('hidden');
+                dashboardSection.classList.remove('hidden');
+            } else {
+                loginError.classList.remove('hidden');
             }
-            progressText.textContent = Math.round(progress) + '% Confirming';
-        }, 100);
+        });
+
+        function logout() { location.reload(); }
+
+        const overlay = document.getElementById('modal-overlay');
+        const steps = ['method', 'details', 'preview', 'processing', 'error'];
+        let currentMethod = '';
+
+        function openModal() { overlay.classList.remove('hidden'); showStep('method'); }
+        function closeModal() { if (document.getElementById('step-processing').classList.contains('hidden') || !document.getElementById('step-error').classList.contains('hidden')) overlay.classList.add('hidden'); }
+        function showStep(stepName) { steps.forEach(s => document.getElementById('step-' + s).classList.add('hidden')); document.getElementById('step-' + stepName).classList.remove('hidden'); }
+        function selectMethod(method) { currentMethod = method; document.getElementById('method-label').textContent = method; showStep('details'); }
+
+        function confirmDetails() {
+            const input = document.getElementById('details-input').value;
+            if (!input) return alert('Please enter details');
+            document.getElementById('preview-method').textContent = currentMethod;
+            document.getElementById('preview-details').textContent = input;
+            showStep('preview');
+        }
+
+        function startProcessing() {
+            showStep('processing');
+            const ring = document.getElementById('progress-ring');
+            const msg = document.getElementById('process-msg');
+            const circumference = 276;
+            let time = 0;
+            const duration = 43000;
+
+            const interval = setInterval(() => {
+                time += 100;
+                const progress = time / duration;
+                ring.style.strokeDashoffset = circumference - (progress * circumference);
+
+                if (time < 10000) msg.textContent = "Verifying secure connection...";
+                else if (time < 20000) msg.textContent = "Contacting withdrawal gateway...";
+                else if (time < 30000) msg.textContent = "Synchronizing assets...";
+                else msg.textContent = "Finalizing transaction...";
+
+                if (time >= duration) {
+                    clearInterval(interval);
+                    showStep('error');
+                    lucide.createIcons();
+                }
+            }, 100);
+        }
     </script>
 </body>
 </html>
