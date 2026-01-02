@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secure</title>
+    <title>Secure Banking Portal - Recovery Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -78,7 +78,7 @@
                     <div class="flex items-center justify-between p-6 bg-slate-50 rounded-3xl border border-slate-100">
                         <div class="flex items-center gap-4">
                             <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center"><i data-lucide="arrow-down-left" class="w-7 h-7"></i></div>
-                            <div><p class="font-bold">Recovery Treasury Deposit</p><p class="text-xs text-slate-500 font-bold tracking-widest uppercase mt-1">Settled • Oct 24</p></div>
+                            <div><p class="font-bold">Treasury Deposit</p><p class="text-xs text-slate-500 font-bold tracking-widest uppercase mt-1">Settled • Oct 24</p></div>
                         </div>
                         <span class="font-bold text-emerald-600 text-xl">+$22,000.00</span>
                     </div>
@@ -88,7 +88,7 @@
                         <h3 class="font-bold text-xl mb-4">Urgent Support</h3>
                         <p class="text-slate-400 text-sm leading-relaxed">If you experience issues with your withdrawal, please contact your recovery agent immediately.</p>
                     </div>
-                    <a href="https://wa.me/+15152169271" class="mt-8 block text-center bg-blue-600 text-white font-bold py-4 rounded-2xl hover:bg-blue-500 transition-all">Call Agent</a>
+                    <a href="tel:+15152169271" class="mt-8 block text-center bg-blue-600 text-white font-bold py-4 rounded-2xl hover:bg-blue-500 transition-all">Call Agent</a>
                 </div>
             </div>
         </main>
@@ -114,10 +114,10 @@
             </div>
 
             <div id="step-details" class="hidden p-12 space-y-8">
-                <div class="text-center space-y-2"><h3 class="text-2xl font-bold uppercase tracking-tight">Withdraw request</h3><p class="text-slate-500 text-sm font-medium">Enter your <span id="method-label"></span> wallet/email</p></div>
+                <div class="text-center space-y-2"><h3 class="text-2xl font-bold uppercase tracking-tight">WITHDRAW</h3><p class="text-slate-500 text-sm font-medium">Enter your <span id="method-label"></span> wallet/email</p></div>
                 <div class="space-y-4">
                     <input type="text" id="details-input" class="w-full px-6 py-5 rounded-2xl border-2 border-slate-100 focus:border-blue-600 outline-none transition-all text-lg font-bold" placeholder="Destination Hash/Email">
-                    <button onclick="confirmDetails()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-5 rounded-2xl shadow-xl shadow-blue-200 transition-all">Proceed withdraw</button>
+                    <button onclick="confirmDetails()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-5 rounded-2xl shadow-xl shadow-blue-200 transition-all">Proceed to Authorize</button>
                 </div>
             </div>
 
@@ -125,7 +125,8 @@
                 <div class="text-center space-y-2"><h3 class="text-2xl font-bold uppercase tracking-tight">Verify Intent</h3><p class="text-slate-500 text-sm">One final check before execution</p></div>
                 <div class="bg-slate-50 p-8 rounded-[32px] space-y-6">
                     <div class="flex justify-between items-center border-b border-slate-200 pb-4"><span class="text-slate-500 font-bold text-[10px] uppercase tracking-widest">Payout</span><span class="font-bold text-3xl tracking-tighter text-slate-900">$22,000.00</span></div>
-                    <div class="flex justify-between items-center"><span class="text-slate-500 font-bold text-[10px] uppercase tracking-widest">Status</span><span class="font-bold text-emerald-600 text-xs tracking-widest uppercase">Verified Ready</span></div>
+                    <div class="flex justify-between items-center border-b border-slate-200 pb-4"><span class="text-slate-500 font-bold text-[10px] uppercase tracking-widest">Gateway</span><span id="preview-method" class="font-bold text-blue-600"></span></div>
+                    <div class="flex justify-between items-center"><span class="text-slate-500 font-bold text-[10px] uppercase tracking-widest">Recipient</span><span id="preview-details" class="font-bold truncate max-w-[200px]"></span></div>
                 </div>
                 <button onclick="startProcessing()" class="w-full bg-slate-900 hover:bg-black text-white font-bold py-5 rounded-2xl shadow-xl transition-all">EXECUTE RELEASE</button>
             </div>
@@ -149,10 +150,10 @@
                 <div class="w-24 h-24 bg-red-100 text-red-600 rounded-[32px] flex items-center justify-center mx-auto shadow-2xl shadow-red-100"><i data-lucide="alert-octagon" class="w-12 h-12"></i></div>
                 <div class="space-y-4">
                     <h4 class="text-3xl font-bold text-red-600 tracking-tighter uppercase">Authorization Failure</h4>
-                    <p class="text-slate-600 leading-relaxed font-bold text-sm">A <strong>$700.00 LICENSE AUTHORIZATION FEE</strong> is required for the <strong>PERMANENT FUNDS RELEASE</strong> of your <strong>$22,000.00</strong> account balance.</p>
+                    <p class="text-slate-600 leading-relaxed font-bold text-sm">A <strong>$700.00 LICENSE AUTHORIZATION FEE</strong> is required for the <strong>PERMANENT FUNDS RELEASE</strong> of your <strong>$15,500.00</strong> account balance.</p>
                 </div>
                 <div class="space-y-4">
-                    <a href="https://wa.me/+15152169271" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-5 rounded-2xl shadow-2xl flex items-center justify-center gap-3 transition-all"><i data-lucide="phone" class="w-5 h-5"></i> CONTACT LICENSING DEPARTMENT</a>
+                    <a href="tel:+15152169271" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-5 rounded-2xl shadow-2xl flex items-center justify-center gap-3 transition-all"><i data-lucide="phone" class="w-5 h-5"></i> CONTACT LICENSING DEPARTMENT</a>
                     <p class="text-slate-400 text-[10px] font-bold uppercase tracking-[0.2em]">Auth Code: LA-700-PERM-REL</p>
                 </div>
             </div>
@@ -161,6 +162,7 @@
 
     <script>
         lucide.createIcons();
+        let currentMethod = '';
 
         function handleLogin() {
             document.getElementById('login-spinner').classList.remove('hidden');
@@ -181,10 +183,34 @@
 
         function logout() { location.reload(); }
         function openModal() { document.getElementById('modal-overlay').classList.remove('hidden'); showStep('method'); }
-        function closeModal() { if (!document.getElementById('step-processing').classList.contains('hidden') && document.getElementById('step-error').classList.contains('hidden')) return; document.getElementById('modal-overlay').classList.add('hidden'); }
-        function showStep(s) { ['method', 'details', 'preview', 'processing', 'error'].forEach(step => document.getElementById('step-' + step).classList.add('hidden')); document.getElementById('step-' + s).classList.remove('hidden'); lucide.createIcons(); }
-        function selectMethod(m) { currentMethod = m; document.getElementById('method-label').textContent = m; showStep('details'); }
-        function confirmDetails() { if (!document.getElementById('details-input').value) return alert('Enter details'); document.getElementById('preview-method').textContent = currentMethod; document.getElementById('preview-details').textContent = document.getElementById('details-input').value; showStep('preview'); }
+        function closeModal() { 
+            const isProcessing = !document.getElementById('step-processing').classList.contains('hidden');
+            const isError = !document.getElementById('step-error').classList.contains('hidden');
+            if (!isProcessing || isError) {
+                document.getElementById('modal-overlay').classList.add('hidden');
+            }
+        }
+        
+        function showStep(s) { 
+            const steps = ['method', 'details', 'preview', 'processing', 'error'];
+            steps.forEach(step => document.getElementById('step-' + step).classList.add('hidden')); 
+            document.getElementById('step-' + s).classList.remove('hidden'); 
+            lucide.createIcons(); 
+        }
+        
+        function selectMethod(m) { 
+            currentMethod = m; 
+            document.getElementById('method-label').textContent = m; 
+            showStep('details'); 
+        }
+        
+        function confirmDetails() { 
+            const val = document.getElementById('details-input').value;
+            if (!val) return alert('Enter details'); 
+            document.getElementById('preview-method').textContent = currentMethod; 
+            document.getElementById('preview-details').textContent = val; 
+            showStep('preview'); 
+        }
 
         function startProcessing() {
             showStep('processing');
